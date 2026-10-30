@@ -1,6 +1,6 @@
 # @mechape/core
 
-The portable, MIT-licensed core used by MechApe desktop and its free Obsidian plugin. This package has no runtime dependencies, network calls, filesystem access, secrets, telemetry, UI, or licensing enforcement.
+The portable, MIT-licensed core used by MechApe desktop and its free Obsidian plugin. This package has no runtime dependencies, implicit network activity, filesystem access, stored secrets, telemetry, UI, or licensing enforcement. Provider functions make requests only through transport supplied by the host.
 
 ## Install
 
