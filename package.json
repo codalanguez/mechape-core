@@ -1,0 +1,40 @@
+{
+  "name": "@mechape/core",
+  "version": "0.1.0",
+  "description": "Portable MechApe provider policy, prompt composition and skill parsing.",
+  "license": "MIT",
+  "author": "Coda Languez",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codalanguez/mechape-core.git"
+  },
+  "type": "commonjs",
+  "exports": {
+    "./openrouter": {
+      "types": "./src/openrouter.d.ts",
+      "default": "./src/openrouter.js"
+    },
+    "./prompt": {
+      "types": "./src/prompt.d.ts",
+      "default": "./src/prompt.js"
+    },
+    "./skills": {
+      "types": "./src/skills.d.ts",
+      "default": "./src/skills.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "check:package": "node scripts/check-package.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "sideEffects": false
+}
