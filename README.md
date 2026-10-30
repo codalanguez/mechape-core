@@ -5,7 +5,7 @@ The portable, MIT-licensed core used by MechApe desktop and its free Obsidian pl
 ## Install
 
 ```sh
-npm install --save-exact https://github.com/codalanguez/mechape-core/releases/download/v0.1.0/mechape-core-0.1.0.tgz
+npm install --save-exact https://github.com/codalanguez/mechape-core/releases/download/v0.2.0/mechape-core-0.2.0.tgz
 ```
 
 Commit the generated lockfile. GitHub Releases hosts the npm-compatible tarball; this package is not published to the npm registry. Public installation needs no private-repository or registry credentials. Both applications pin the same release and lockfile integrity hash. Obsidian bundles the code into its single plugin entry point; desktop includes it as a production dependency.
@@ -22,7 +22,15 @@ The same subpaths support TypeScript named imports with bundled declarations.
 - `prompt`: project and host instructions, bounded/deduplicated skills, memory, and untrusted reference blocks. Host applications must still enforce tool permissions in code.
 - `skills`: the existing SKILL.md frontmatter parser, including folded fields and CRLF. This is intentionally not a full YAML parser.
 
-The initial release extracts the existing shared implementation without changing its behavior. Direct Anthropic/Ollama adapters and agent loops are not yet unified. Obsidian vault boundaries and write review, desktop filesystem tools, credential storage, and paid licensing stay in their host applications.
+Version 0.2.0 also shares provider request/response adapters and the bounded agent loop:
+
+- providers: Ollama, OpenRouter, direct Anthropic, and OpenAI-compatible request construction; model-list decoding; raw tool metadata and result round trips; endpoint validation; safe HTTP errors; abortable transport with timeouts. Transport is injected by the host. Desktop llama.cpp uses the compatible adapter after host-owned model startup.
+- agent: one model/tool loop, validating complete batches before execution, allowing only advertised tools, propagating cancellation, bounding conversation size/calls/rounds, and retaining tool history. Hosts supply request and execute callbacks. A request failure never silently restarts a tool sequence. Explicit unsupported-tool responses retry without tools.
+- stream: the shared OpenAI SSE-to-NDJSON translator, including reasoning and OpenRouter usage. Desktop streams a final answer after the common tool phase (prepareForStream); Obsidian receives complete replies. Direct Anthropic and Ollama use complete-response adapters; a streaming UI for them is not added here.
+
+Obsidian vault boundaries, review dialogs, concurrent-edit checks and actual writes remain in its VaultTools executor. The core cannot grant access or approve a write. Desktop keeps MCP process/tool execution, model process supervision/downloads, storage, credentials, and paid licensing. Catalog caching and account UI remain host concerns.
+
+The loop defaults to 12 rounds, 12 calls per response and 220,000 history characters. Hosts may choose smaller budgets; desktop currently allows five tool rounds. Exhaustion fails clearly and does not undo or automatically repeat completed operations. The shared loop does not retry arbitrary network failures. Malformed or truncated tool responses fail before tools execute; desktop no longer substitutes empty arguments or silently falls back after a loop failure.
 
 ## Develop and release
 

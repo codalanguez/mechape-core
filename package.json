@@ -1,6 +1,6 @@
 {
   "name": "@mechape/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Portable MechApe provider policy, prompt composition and skill parsing.",
   "license": "MIT",
   "author": "Coda Languez",
@@ -22,7 +22,19 @@
       "types": "./src/skills.d.ts",
       "default": "./src/skills.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./providers": {
+      "types": "./src/providers.d.ts",
+      "default": "./src/providers.js"
+    },
+    "./agent": {
+      "types": "./src/agent.d.ts",
+      "default": "./src/agent.js"
+    },
+    "./stream": {
+      "types": "./src/stream.d.ts",
+      "default": "./src/stream.js"
+    }
   },
   "files": [
     "src",
