@@ -2,6 +2,15 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { runAgent } = require('@mechape/core/agent');
 const { makeRequest, parseResponse, send, safeErrorData, fetchTransport, wireMessages, mapCompatibleOptions } = require('@mechape/core/providers');
+test('buffered and streaming requests are bound to the configured destination', async () => {
+  const fetch = async (_url,options) => {
+    assert.equal(options.redirect,'error');
+    return new Response('{}');
+  };
+  await fetchTransport(fetch)({url:'https://example.test/v1',method:'POST',headers:{},body:'{}'});
+  await require('@mechape/core/providers').streamWire({provider:'compatible',
+    connection:{baseUrl:'https://example.test/v1',model:'demo'},messages:[],fetch});
+});
 const definition = { name: 'read_note', description: 'Read', parameters: { type: 'object' } };
 const call = { id: 'one', name: 'read_note', arguments: { path: 'A.md' } };
 const final = { role: 'assistant', content: 'done' };

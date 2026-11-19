@@ -147,7 +147,7 @@ async function send(transport, request, signal, timeoutMs = 120000) {
 function fetchTransport(fetchImpl) {
   return async (request, signal) => {
     let response;
-    try { response = await fetchImpl(request.url, { method: request.method, headers: request.headers, body: request.body, signal }); }
+    try { response = await fetchImpl(request.url, { method: request.method, headers: request.headers, body: request.body, signal, redirect: 'error' }); }
     catch { signal?.throwIfAborted(); throw new Error('Cannot reach the provider. Check the connection and model server.'); }
     const text = await response.text();
     if (!response.ok) return { status: response.status, json: safeErrorData(text) };
@@ -172,7 +172,7 @@ async function streamWire({ provider, connection, messages, options = {}, dataCo
   signal?.throwIfAborted();
   const request = makeWireRequest(provider, connection, messages, [], { options, dataCollection, stream: true });
   let response;
-  try { response = await fetchImpl(request.url, { method: request.method, headers: request.headers, body: request.body, signal }); }
+  try { response = await fetchImpl(request.url, { method: request.method, headers: request.headers, body: request.body, signal, redirect: 'error' }); }
   catch { signal?.throwIfAborted(); throw new Error('Cannot reach the provider. Check the connection and model server.'); }
   if (!response.ok) throw providerError(response.status, safeErrorData(await response.text()));
   return { ok: true, status: response.status, body: sseToNdjson(response.body, { onUsage: provider === 'openrouter' ? openRouterUsage : undefined }) };
